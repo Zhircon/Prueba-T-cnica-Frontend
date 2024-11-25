@@ -8,18 +8,21 @@ import {useFetch} from '../CustomHooks/useFetch';
 
 function RegisterModal() {
   const [show, setShow] = useState(false);
-  const [isNewProductTypeHidden, setIsNewProductTypeDisabled] = useState(false);
+  const [isNewProductTypeHidden, setIsNewProductTypeHidden] = useState(false);
   const [name,setName] = useState('');
   const [productTypeId,setProductTypeId] = useState('0');
   const [description,setDescription] = useState('');
   const [isButtonSubmitDisabled,setIsButtonSubmitDisabled] = useState(true);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setIsNewProductTypeHidden(false);
+    setShow(false)
+  };
   const handleShow = () => setShow(true);
   
   const handleSelectProductTypeIdChange=(event)=>{
     event.target.value=='0' ? 
-    setIsNewProductTypeDisabled(false): 
-    setIsNewProductTypeDisabled(true);
+    setIsNewProductTypeHidden(false): 
+    setIsNewProductTypeHidden(true);
     setProductTypeId(event.target.value);
   }
   const handleInputNameChange = (event) => {
@@ -33,6 +36,7 @@ function RegisterModal() {
     'http://localhost:8000/api/producttypes'
   );
   const handleSubmit = (e) =>{
+    e.target.disabled=true;
     var inputNameValue=document.getElementById("modal.name").value;
     var inputDescriptionValue=document.getElementById("modal.description").value;
     var inputSelectValue = document.getElementById("modal.select").value;
@@ -53,6 +57,7 @@ function RegisterModal() {
        }).then((response)=>response.json())
        .then((data)=>console.log(data))
        .then(()=>setShow(false))
+       .then(()=>e.target.disabled=true)
        .finally(()=>window.location.reload(false))
        ;
     }else{
